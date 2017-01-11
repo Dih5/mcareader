@@ -2,18 +2,20 @@
 # -*- coding: utf-8 -*-
 
 """
-TestMca.py: Tests for the `mcarader` module.
+TestMca.py: Tests for the `mcareader` module.
 """
 
 import unittest
 
-import mcareader as mca
 import numpy as np
+import os
+
+import mcareader as mca
 
 
 class TestMca(unittest.TestCase):
     def test_mca(self):
-        f = mca.Mca("demo.mca")
+        f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
 
         xx, yy = f.get_points(trim_zeros=False)
         self.assertEqual(True, isinstance(xx, np.ndarray))
