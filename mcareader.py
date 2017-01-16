@@ -111,7 +111,7 @@ class Mca:
         """
         points = self.get_calibration_points()
         info = sys.version_info
-        if info.major == 3 and info.minor < 4 or info.major == 2 and info.minor < 7:
+        if info[0] == 3 and info[1] < 4 or info[0] == 2 and info[1] < 7: #py2 < 2.7 or py3 < 3.4
             extrapolation_support = False
         else:
             extrapolation_support = True
