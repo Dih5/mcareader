@@ -121,6 +121,7 @@ class Mca:
 
         if method == "interpolation" and not extrapolation_support:
             warnings.warn("Warning: extrapolation not supported with active Python interpreter. Using best fit instead")
+            method = "bestfit"
 
         if method == "interpolation":
             return interpolate.interp1d(points[:, 0], points[:, 1], fill_value="extrapolate")
