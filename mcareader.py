@@ -126,7 +126,7 @@ class Mca:
             return interpolate.interp1d(points[:, 0], points[:, 1], fill_value="extrapolate")
         elif method == "bestfit":
             slope, intercept, _, _, _ = linregress(points[:, 0], points[:, 1])
-            return lambda x: slope * x + intercept
+            return np.vectorize(lambda x: slope * x + intercept)
         else:
             raise ValueError("Unknown method: %s" % method)
 

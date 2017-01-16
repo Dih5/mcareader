@@ -17,10 +17,11 @@ class TestMca(unittest.TestCase):
     def test_mca(self):
         f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
 
-        xx, yy = f.get_points(trim_zeros=False)
-        self.assertEqual(True, isinstance(xx, np.ndarray))
-        self.assertEqual(True, isinstance(yy, np.ndarray))
-        self.assertEqual(xx.shape, yy.shape)
+        for method in ["bestfit", "interpolation"]:
+            xx, yy = f.get_points(trim_zeros=False, calibration_method=method)
+            self.assertEqual(True, isinstance(xx, np.ndarray))
+            self.assertEqual(True, isinstance(yy, np.ndarray))
+            self.assertEqual(xx.shape, yy.shape)
 
         self.assertNotEqual("", f.get_section("DATA"))
         self.assertEqual("", f.get_section("UNEXISTING_SECTION"))
