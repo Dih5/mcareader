@@ -1,6 +1,9 @@
 """A minimal python interface to read Amptek's mca files"""
 
 import re
+import sys
+import warnings
+
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import interpolate
@@ -107,8 +110,18 @@ class Mca:
 
         """
         points = self.get_calibration_points()
+        info = sys.version_info
+        if info.major == 3 and info.minor < 4 or info.major == 2 and info.minor < 7:
+            extrapolation_support = False
+        else:
+            extrapolation_support = True
+
         if method is None:
-            method = "interpolation"
+            method = "bestfit"
+
+        if method == "interpolation" and not extrapolation_support:
+            warnings.warn("Warning: extrapolation not supported with active Python interpreter. Using best fit instead")
+
         if method == "interpolation":
             return interpolate.interp1d(points[:, 0], points[:, 1], fill_value="extrapolate")
         elif method == "bestfit":
