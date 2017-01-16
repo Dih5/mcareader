@@ -117,13 +117,15 @@ class Mca:
         else:
             raise ValueError("Unknown method: %s" % method)
 
-    def get_points(self, calibration_method=None, trim_zeros=True):
+    def get_points(self, calibration_method=None, trim_zeros=True, background=None):
         """
         Get the points of the spectrum.
 
         Args:
             calibration_method (str): The method used for the calibration. See `get_calibration_function`.
             trim_zeros (bool): Whether to remove values with no counts.
+            background (`Mca`): An spectrum describing a background to subtract from the returned points. The background
+                                is scaled using the REAL_TIME parameters.
 
         Returns:
             (tuple): tuple containing:
@@ -136,6 +138,9 @@ class Mca:
 
         f = self.get_calibration_function(method=calibration_method)
         yy = _str_to_array(self.get_section("DATA"))[:, 0]
+        if background:
+            background_yy = _str_to_array(background.get_section("DATA"))[:, 0]
+            yy -= background_yy * (float(self.get_variable("REAL_TIME")) / float(background.get_variable("REAL_TIME")))
         xx = f(range(len(yy)))
         if trim_zeros:
             yy = np.trim_zeros(yy, 'f')

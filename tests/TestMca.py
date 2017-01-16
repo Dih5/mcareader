@@ -28,6 +28,16 @@ class TestMca(unittest.TestCase):
         self.assertAlmostEqual(100.0, float(f.get_variable("REAL_TIME")))  # Fixed value in the demo file
         self.assertEqual("", f.get_variable("UNEXISTING_VARIABLE"))
 
+    def test_background(self):
+        f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
+        f2 = mca.Mca(os.path.join(os.path.dirname(__file__), "demo2.mca"))
+        # demo2 has the same counts in double time. Hence, subtraction must yield half of the original counts
+
+        xx, yy = f.get_points()
+        xx2, yy2 = f.get_points(background=f2)
+        for y, y2 in zip(yy, yy2):
+            self.assertAlmostEqual(y, y2*2)
+
 
 if __name__ == "__main__":
     unittest.main()
