@@ -101,17 +101,17 @@ class Mca:
         Args:
             method(str): The method to use. Available methods include:
 
+                * 'bestfit': A linear fit in the sense of least-squares (default).
                 * 'interpolation': Use a linear interpolation.
-                * 'bestfit': A linear fit in the sense of least-squares.
 
 
         Returns:
-            (`Callable`): A function mapping channel number to energy.
+            (`Callable`): A function mapping channel number to energy. Note the first channel is number 0.
 
         """
         points = self.get_calibration_points()
         info = sys.version_info
-        if info[0] == 3 and info[1] < 4 or info[0] == 2 and info[1] < 7: #py2 < 2.7 or py3 < 3.4
+        if info[0] == 3 and info[1] < 4 or info[0] == 2 and info[1] < 7:  # py2 < 2.7 or py3 < 3.4
             extrapolation_support = False
         else:
             extrapolation_support = True
