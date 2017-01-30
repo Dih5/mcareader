@@ -165,6 +165,38 @@ class Mca:
                 xx = xx[:len(yy) - len(xx)]
         return xx, yy
 
+    def get_counts(self, calibration_method=None, background=None):
+        """
+        Get the number of counts in the spectrum.
+
+        Args:
+            calibration_method (str): The method used for the calibration. See `get_calibration_function`.
+            background (`Mca`): An spectrum describing a background to subtract from the returned points. The background
+                                is scaled using the REAL_TIME parameters.
+
+        Returns:
+            (float): Number of counts in the spectrum.
+
+        """
+        xx, yy = self.get_points(calibration_method=calibration_method, background=background)
+        return sum(yy)
+
+    def get_total_energy(self, calibration_method=None, background=None):
+        """
+        Get the total energy in the spectrum.
+
+        Args:
+            calibration_method (str): The method used for the calibration. See `get_calibration_function`.
+            background (`Mca`): An spectrum describing a background to subtract from the returned points. The background
+                                is scaled using the REAL_TIME parameters.
+
+        Returns:
+            (float): Total energy of counts in the spectrum, in the units set in the calibration.
+
+        """
+        xx, yy = self.get_points(calibration_method=calibration_method, background=background)
+        return sum([x * y for x, y in zip(xx, yy)])
+
     def plot(self, log_y=False, log_x=False, calibration_method=None):
         """
         Show a plot of the spectrum.

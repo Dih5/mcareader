@@ -39,6 +39,12 @@ class TestMca(unittest.TestCase):
         for y, y2 in zip(yy, yy2):
             self.assertAlmostEqual(y, y2*2)
 
+    def test_counts(self):
+        f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
+        # Values calculated independently using a spreadsheet
+        self.assertAlmostEqual(f.get_counts(), 96897)
+        self.assertAlmostEqual(f.get_total_energy(), 978116.75)
+
 
 if __name__ == "__main__":
     unittest.main()
