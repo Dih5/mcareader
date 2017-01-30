@@ -39,6 +39,13 @@ class TestMca(unittest.TestCase):
         for y, y2 in zip(yy, yy2):
             self.assertAlmostEqual(y, y2*2)
 
+    def test_fit(self):
+        f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
+        g = f.get_calibration_function(method="bestfit")
+        # Values calculated independently
+        self.assertAlmostEqual(g(0), 1./6.)
+        self.assertAlmostEqual(g(1)-g(0), 0.05)
+
     def test_counts(self):
         f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
         # Values calculated independently using a spreadsheet
