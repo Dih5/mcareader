@@ -197,7 +197,7 @@ class Mca:
         xx, yy = self.get_points(calibration_method=calibration_method, background=background)
         return sum([x * y for x, y in zip(xx, yy)])
 
-    def plot(self, log_y=False, log_x=False, calibration_method=None):
+    def plot(self, log_y=False, log_x=False, calibration_method=None, background=None):
         """
         Show a plot of the spectrum.
 
@@ -205,9 +205,11 @@ class Mca:
             log_y(bool): Whether the y-axis is in logarithmic scale.
             log_x(bool): Whether the x-axis is in logarithmic scale.
             calibration_method (str): The method used for the calibration. See `get_calibration_function`.
+            background (`Mca`): An spectrum describing a background to subtract from the returned points. The background
+                                is scaled using the REAL_TIME parameters.
 
         """
-        xx, yy = self.get_points(calibration_method=calibration_method)
+        xx, yy = self.get_points(calibration_method=calibration_method, background=background)
         if log_y and log_x:
             plt.loglog(xx, yy)
         elif log_y:
