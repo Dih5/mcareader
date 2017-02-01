@@ -12,7 +12,7 @@ from scipy.stats import linregress
 from io import open  # python 2 compatibility
 
 __author__ = 'Dih5'
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 
 def _str_to_array(s, sep=" "):
