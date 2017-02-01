@@ -14,17 +14,15 @@ import mcareader as mca
 
 
 class TestMca(unittest.TestCase):
-    def test_mca(self):
+    def test_points(self):
         f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
 
         for method in ["bestfit", "interpolation"]:
-            xx, yy = f.get_points(trim_zeros=False, calibration_method=method)
-            self.assertEqual(True, isinstance(xx, np.ndarray))
-            self.assertEqual(True, isinstance(yy, np.ndarray))
-            self.assertEqual(xx.shape, yy.shape)
-
-        self.assertNotEqual("", f.get_section("DATA"))
-        self.assertEqual("", f.get_section("UNEXISTING_SECTION"))
+            for trim_zeros in [True, False]:
+                xx, yy = f.get_points(trim_zeros=trim_zeros, calibration_method=method)
+                self.assertTrue(isinstance(xx, np.ndarray))
+                self.assertTrue(isinstance(yy, np.ndarray))
+                self.assertEqual(xx.shape, yy.shape)
 
     def test_variables(self):
         f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
@@ -34,6 +32,11 @@ class TestMca(unittest.TestCase):
         self.assertEqual("80", f.get_variable("CLCK"))
         self.assertEqual("32°C", f.get_variable("Board Temp"))
         self.assertEqual("", f.get_variable("UNEXISTING_VARIABLE"))
+
+    def test_sections(self):
+        f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
+        self.assertNotEqual("", f.get_section("DATA"))
+        self.assertEqual("", f.get_section("UNEXISTING_SECTION"))
 
     def test_background(self):
         f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
