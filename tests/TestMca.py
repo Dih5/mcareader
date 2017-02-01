@@ -30,7 +30,7 @@ class TestMca(unittest.TestCase):
         # Check all the patterns in the file
         self.assertEqual("3", f.get_variable("GAIN"))
         self.assertEqual("80", f.get_variable("CLCK"))
-        self.assertEqual("32°C", f.get_variable("Board Temp"))
+        self.assertEqual("217K", f.get_variable("TEC Temp"))
         self.assertEqual("", f.get_variable("UNEXISTING_VARIABLE"))
 
     def test_sections(self):
