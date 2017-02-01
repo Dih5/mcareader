@@ -26,7 +26,13 @@ class TestMca(unittest.TestCase):
         self.assertNotEqual("", f.get_section("DATA"))
         self.assertEqual("", f.get_section("UNEXISTING_SECTION"))
 
-        self.assertAlmostEqual(100.0, float(f.get_variable("REAL_TIME")))  # Fixed value in the demo file
+    def test_variables(self):
+        f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
+        # Check the fixed values in the demo file
+        # Check all the patterns in the file
+        self.assertEqual("3", f.get_variable("GAIN"))
+        self.assertEqual("80", f.get_variable("CLCK"))
+        self.assertEqual("32°C", f.get_variable("Board Temp"))
         self.assertEqual("", f.get_variable("UNEXISTING_VARIABLE"))
 
     def test_background(self):

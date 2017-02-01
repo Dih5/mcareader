@@ -78,7 +78,16 @@ class Mca:
             (str): The text of the value or "" if not found.
 
         """
+        # There are various patterns used in the file, depending on the section
+        # Just try them all
+        # Pattern 1: FOO - VALUE
         m = re.match(r"(?:.*)%s - (.*?)$" % variable, self.raw, re.DOTALL + re.MULTILINE)
+        # Pattern 2: FOO=VALUE;    EXPLANATION
+        if not m:
+            m = re.match(r"(?:.*)%s=(.*?);" % variable, self.raw, re.DOTALL + re.MULTILINE)
+        # Pattern 3: FOO: VALUE
+        if not m:
+            m = re.match(r"(?:.*)%s: (.*?)$" % variable, self.raw, re.DOTALL + re.MULTILINE)
         return m.group(1).strip() if m else ""
 
     def get_calibration_points(self):
