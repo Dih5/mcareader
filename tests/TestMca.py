@@ -46,14 +46,14 @@ class TestMca(unittest.TestCase):
         xx, yy = f.get_points()
         xx2, yy2 = f.get_points(background=f2)
         for y, y2 in zip(yy, yy2):
-            self.assertAlmostEqual(y, y2*2)
+            self.assertAlmostEqual(y, y2 * 2)
 
     def test_fit(self):
         f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
         g = f.get_calibration_function(method="bestfit")
         # Values calculated independently
-        self.assertAlmostEqual(g(0), 1./6.)
-        self.assertAlmostEqual(g(1)-g(0), 0.05)
+        self.assertAlmostEqual(g(0), 1. / 6.)
+        self.assertAlmostEqual(g(1) - g(0), 0.05)
 
     def test_counts(self):
         f = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
@@ -68,6 +68,16 @@ class TestMca(unittest.TestCase):
         # Check g is the identity
         for x in [3.0, 7.2, 103.5]:
             self.assertEqual(g(x), x)
+
+    def test_added_calibration(self):
+        f1 = mca.Mca(os.path.join(os.path.dirname(__file__), "demo.mca"))
+        f2 = mca.Mca(os.path.join(os.path.dirname(__file__), "demoNoCal.mca"),
+                     calibration=os.path.join(os.path.dirname(__file__), "demo.mca"))
+        f3 = mca.Mca(os.path.join(os.path.dirname(__file__), "demoNoCal.mca"),
+                     calibration=[[120, 6.0], [210, 11.0], [300.0, 15.0]])
+        self.assertEqual(f1.get_total_energy(), f2.get_total_energy())
+        self.assertEqual(f1.get_total_energy(), f3.get_total_energy())
+
 
 if __name__ == "__main__":
     unittest.main()

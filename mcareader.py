@@ -37,21 +37,35 @@ class Mca:
 
     Attributes:
         raw(str): The text of the file.
+        calibration_points (`numpy.ndarray`): The 2D array with the calibration data or None if there is no such
+                                              information.
 
     """
 
-    def __init__(self, file, encoding='iso-8859-15'):
+    def __init__(self, file, encoding='iso-8859-15', calibration=None):
         """
         Load the content of a mca file.
 
         Args:
             file(str): The path to the file.
             encoding (str): The encoding to use to read the file.
+            calibration (str or list): A path with a file used to read calibration or a 2D matrix describing
+                                                  it.
 
 
         """
         with open(file, "r", encoding=encoding) as f:
             self.raw = f.read()
+
+        if calibration is None:
+            self.calibration_points = self.get_calibration_points()
+        elif isinstance(calibration, str):
+            self.calibration_points = Mca(calibration, encoding=encoding).get_calibration_points()
+        else:
+            self.calibration_points = np.asarray(calibration)
+
+        if self.calibration_points is None:
+            warnings.warn("Warning: no calibration data was found. Using channel number instead of energy")
 
     def get_section(self, section):
         """
@@ -92,7 +106,7 @@ class Mca:
 
     def get_calibration_points(self):
         """
-        Get the calibration points from the MCA file.
+        Get the calibration points from the MCA file, regardless of the calibration parameter used to create the object.
 
 
         Returns:
@@ -120,9 +134,9 @@ class Mca:
             (`Callable`): A function mapping channel number to energy. Note the first channel is number 0.
 
         """
-        points = self.get_calibration_points()
+        points = self.calibration_points
         if points is None:
-            warnings.warn("Warning: no calibration data was found. Using channel number instead of energy")
+            # User was already warned when the object was created.
             return np.vectorize(lambda x: x)
         info = sys.version_info
         if info[0] == 3 and info[1] < 4 or info[0] == 2 and info[1] < 7:  # py2 < 2.7 or py3 < 3.4
