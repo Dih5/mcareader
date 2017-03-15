@@ -63,7 +63,7 @@ class TestMca(unittest.TestCase):
 
     def test_no_calibration(self):
         f = mca.Mca(os.path.join(os.path.dirname(__file__), "demoNoCal.mca"))
-        self.assertIsNone(f.get_calibration_points())
+        self.assertTrue(f.get_calibration_points() is None)
         g = f.get_calibration_function()
         # Check g is the identity
         for x in [3.0, 7.2, 103.5]:
