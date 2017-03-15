@@ -96,10 +96,12 @@ class Mca:
 
 
         Returns:
-            (`numpy.ndarray`): The 2D array with the data.
+            (`numpy.ndarray`): The 2D array with the data or None if there is no calibration data.
 
         """
         cal = self.get_section("CALIBRATION")
+        if not cal:
+            return
         cal = cal[cal.find('\n') + 1:]  # remove first line
         return _str_to_array(cal)
 
@@ -119,6 +121,9 @@ class Mca:
 
         """
         points = self.get_calibration_points()
+        if points is None:
+            warnings.warn("Warning: no calibration data was found. Using channel number instead of energy")
+            return np.vectorize(lambda x: x)
         info = sys.version_info
         if info[0] == 3 and info[1] < 4 or info[0] == 2 and info[1] < 7:  # py2 < 2.7 or py3 < 3.4
             extrapolation_support = False
@@ -201,6 +206,7 @@ class Mca:
 
         Returns:
             (float): Total energy of counts in the spectrum, in the units set in the calibration.
+            If there is no calibration available, a meaningless number is returned.
 
         """
         xx, yy = self.get_points(calibration_method=calibration_method, background=background)

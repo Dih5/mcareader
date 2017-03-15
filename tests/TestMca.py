@@ -61,6 +61,13 @@ class TestMca(unittest.TestCase):
         self.assertAlmostEqual(f.get_counts(), 96897)
         self.assertAlmostEqual(f.get_total_energy(), 978116.75)
 
+    def test_no_calibration(self):
+        f = mca.Mca(os.path.join(os.path.dirname(__file__), "demoNoCal.mca"))
+        self.assertIsNone(f.get_calibration_points())
+        g = f.get_calibration_function()
+        # Check g is the identity
+        for x in [3.0, 7.2, 103.5]:
+            self.assertEqual(g(x), x)
 
 if __name__ == "__main__":
     unittest.main()
